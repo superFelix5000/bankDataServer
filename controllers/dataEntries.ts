@@ -1,4 +1,3 @@
-import { RouterContext } from "https://deno.land/x/oak/mod.ts";
 import { BankDataEntry, Category, SimpleDate } from "../types.ts";
 
 const entries: BankDataEntry[] = [
@@ -55,14 +54,8 @@ const entries: BankDataEntry[] = [
   },
 ];
 
-// const fetchAllDataEntries = ({response}: {response: any}) => {
-//     response.body = {
-//         success: true,
-//         data: entries
-//     }
-// }
-
 const fetchAllDataEntries = ({ response }: any) => {
+  console.log(JSON.stringify(entries));
   response.status = 200;
   response.body = {
     success: true,
@@ -70,4 +63,28 @@ const fetchAllDataEntries = ({ response }: any) => {
   };
 };
 
-export { fetchAllDataEntries };
+const saveAllDataEntries = async (
+  { request, response }: { request: any; response: any },
+) => {
+  const body = request.body();
+  const values: BankDataEntry[] = await body.value;
+  if (request.hasBody) {
+    console.log(values);
+    
+    entries.push(...values);
+    console.log('new amount: ' + entries.length);
+
+    response.status = 201;
+    response.body = {
+      success: true,
+    };
+  } else {
+      response.status = 404;
+      response.body = {
+          success: false
+      }
+  }
+  
+};
+
+export { fetchAllDataEntries, saveAllDataEntries };
