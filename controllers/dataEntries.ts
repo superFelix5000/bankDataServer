@@ -1,61 +1,12 @@
 import { BankDataEntry, Category, SimpleDate } from "../types.ts";
 
-const entries: BankDataEntry[] = [
-  {
-    id: "1",
-    postingDate: new SimpleDate(1, 2, 2019),
-    valueDate: new SimpleDate(1, 2, 2019),
-    paymentDate: new SimpleDate(1, 2, 2019),
-    amount: 10,
-    recipientOrPayer: "recipientOrPayer",
-    accountNumber: 123,
-    bic: 123,
-    event: "event",
-    reference: "reference",
-    payerReference: "payerReference",
-    message: "message",
-    cardNumber: 123123123,
-    receipt: "receipt",
-    category: Category.CLOTHING,
-  },
-  {
-    id: "2",
-    postingDate: new SimpleDate(1, 2, 2020),
-    valueDate: new SimpleDate(1, 2, 2020),
-    paymentDate: new SimpleDate(1, 2, 2020),
-    amount: 10,
-    recipientOrPayer: "recipientOrPayer",
-    accountNumber: 123,
-    bic: 123,
-    event: "event",
-    reference: "reference",
-    payerReference: "payerReference",
-    message: "message",
-    cardNumber: 123123123,
-    receipt: "receipt",
-    category: Category.ELECTRONICSERVICES,
-  },
-  {
-    id: "3",
-    postingDate: new SimpleDate(1, 2, 2021),
-    valueDate: new SimpleDate(1, 2, 2021),
-    paymentDate: new SimpleDate(1, 2, 2021),
-    amount: 10,
-    recipientOrPayer: "recipientOrPayer",
-    accountNumber: 123,
-    bic: 123,
-    event: "event",
-    reference: "reference",
-    payerReference: "payerReference",
-    message: "message",
-    cardNumber: 123123123,
-    receipt: "receipt",
-    category: Category.OTHER,
-  },
-];
+const fileName = "data/entries.json";
+let bankDataEntries: BankDataEntry[] = [];
 
-const fetchAllDataEntries = ({ response }: any) => {
-  console.log(JSON.stringify(entries));
+const fetchAllDataEntries = async ({ response }: any) => {
+  const text = await Deno.readTextFile(fileName);
+  const entries: BankDataEntry[] = JSON.parse(text);
+
   response.status = 200;
   response.body = {
     success: true,
@@ -70,21 +21,22 @@ const saveAllDataEntries = async (
   const values: BankDataEntry[] = await body.value;
   if (request.hasBody) {
     console.log(values);
-    
-    entries.push(...values);
-    console.log('new amount: ' + entries.length);
+
+    bankDataEntries = values;
+    console.log("new amount: " + bankDataEntries.length);
+
+    Deno.writeTextFileSync(fileName, JSON.stringify(bankDataEntries));
 
     response.status = 201;
     response.body = {
       success: true,
     };
   } else {
-      response.status = 404;
-      response.body = {
-          success: false
-      }
+    response.status = 404;
+    response.body = {
+      success: false,
+    };
   }
-  
 };
 
 export { fetchAllDataEntries, saveAllDataEntries };
