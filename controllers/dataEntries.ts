@@ -62,7 +62,8 @@ const entries: BankDataEntry[] = [
 //     }
 // }
 
-const fetchAllDataEntries = ({ response }: { response: any }) => {
+const fetchAllDataEntries = ({ response }: any) => {
+  response.status = 200;
   response.body = {
     success: true,
     data: entries,
