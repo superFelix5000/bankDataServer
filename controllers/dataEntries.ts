@@ -1,4 +1,4 @@
-import { BankDataEntry, Category, SimpleDate } from "../types.ts";
+import { BankDataEntry } from "../types.ts";
 
 const fileName = "data/entries.json";
 let bankDataEntries: BankDataEntry[] = [];
