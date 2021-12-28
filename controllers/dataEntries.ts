@@ -7,6 +7,8 @@ const fetchAllDataEntries = async ({ response }: any) => {
   const text = await Deno.readTextFile(fileName);
   const entries: BankDataEntry[] = JSON.parse(text);
 
+  // console.log(JSON.stringify(entries[0]));
+
   response.status = 200;
   response.body = {
     success: true,
@@ -20,11 +22,7 @@ const saveAllDataEntries = async (
   const body = request.body();
   const values: BankDataEntry[] = await body.value;
   if (request.hasBody) {
-    console.log(values);
-
     bankDataEntries = values;
-    console.log("new amount: " + bankDataEntries.length);
-
     Deno.writeTextFileSync(fileName, JSON.stringify(bankDataEntries));
 
     response.status = 201;
