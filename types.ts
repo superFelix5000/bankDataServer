@@ -1,3 +1,8 @@
+export type RecipientCategory = {
+    recipient: string,
+    category: Category
+};
+
 // TODO: this should be shared between frontend and backend
 export enum Category {
     HOBBIES = 'HOBBIES',
