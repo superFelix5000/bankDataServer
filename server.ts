@@ -7,7 +7,7 @@ const port = 8000;
 const app = new Application();
 
 app.use(oakCors({
-  origin: "http://localhost:4200",
+  origin: "http://localhost:8080"
 }));
 app.use(router.routes());
 app.use(router.allowedMethods());
