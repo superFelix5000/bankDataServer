@@ -24,6 +24,9 @@ export enum Category {
   CASH = "CASH",
   BAARI = "BAARI",
   CHARITY = "CHARITY",
+  ELECTRICITY = 'ELECTRICITY',
+  LOAN = 'LOAN',
+  MAINTENANCECHARGE = 'MAINTENANCE_CHARGE'
 }
 
 export class SimpleDate {
@@ -50,6 +53,7 @@ export class SimpleDate {
 
 export interface BankDataEntry {
   id: string;
+  bankaccountid: number;
   postingDate: SimpleDate;
   valueDate: SimpleDate;
   paymentDate: SimpleDate;
