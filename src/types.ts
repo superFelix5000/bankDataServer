@@ -24,9 +24,9 @@ export enum Category {
   CASH = "CASH",
   BAARI = "BAARI",
   CHARITY = "CHARITY",
-  ELECTRICITY = 'ELECTRICITY',
-  LOAN = 'LOAN',
-  MAINTENANCECHARGE = 'MAINTENANCE_CHARGE'
+  ELECTRICITY = "ELECTRICITY",
+  LOAN = "LOAN",
+  MAINTENANCECHARGE = "MAINTENANCE_CHARGE",
 }
 
 export class SimpleDate {
@@ -42,11 +42,7 @@ export class SimpleDate {
 
   toString(): string {
     return (
-      this.day.toString() +
-      "." +
-      this.month.toString() +
-      "." +
-      this.year.toString()
+      `${this.day.toString()}.${this.month.toString()}.${this.year.toString()}`
     );
   }
 }

@@ -1,5 +1,4 @@
-import { BankDataEntry } from "../types.ts";
-import { RecipientCategory } from "../types.ts";
+import { BankDataEntry, RecipientCategory } from "../src/types.ts";
 
 const fileNameBankDataEntries = "data/entries.json";
 const fileNameCategoryMap = "data/categoryMap.json";
@@ -15,9 +14,10 @@ const fetchCategoryMap = async ({ response }: any) => {
   };
 };
 
-const saveCategoryMap = async (
-  { request, response }: { request: any; response: any },
-) => {
+const saveCategoryMap = async ({
+  request,
+  response,
+}: { request: any; response: any }) => {
   const body = request.body();
   const values: RecipientCategory[] = await body.value;
   if (request.hasBody) {
@@ -48,14 +48,18 @@ const fetchAllDataEntries = async ({ response }: any) => {
   };
 };
 
-const saveAllDataEntries = async (
-  { request, response }: { request: any; response: any },
-) => {
+const saveAllDataEntries = async ({
+  request,
+  response,
+}: { request: any; response: any }) => {
   const body = request.body();
   const values: BankDataEntry[] = await body.value;
   if (request.hasBody) {
     const newBankDataEntries = values;
-    Deno.writeTextFileSync(fileNameBankDataEntries, JSON.stringify(newBankDataEntries));
+    Deno.writeTextFileSync(
+      fileNameBankDataEntries,
+      JSON.stringify(newBankDataEntries),
+    );
 
     response.status = 201;
     response.body = {
@@ -69,24 +73,30 @@ const saveAllDataEntries = async (
   }
 };
 
-const appendAllDataEntries = async (
-  { request, response }: { request: any; response: any },
-) => {
+const appendAllDataEntries = async ({
+  request,
+  response,
+}: { request: any; response: any }) => {
   const body = request.body();
   const values: BankDataEntry[] = await body.value;
   if (request.hasBody) {
     let newBankDataEntries = values;
 
-    console.log('entries to add: ' + newBankDataEntries.length);
+    console.log(`entries to add: ${newBankDataEntries.length}`);
 
     const oldEntriesText = await Deno.readTextFile(fileNameBankDataEntries);
     const oldEntries: BankDataEntry[] = JSON.parse(oldEntriesText);
 
-    console.log('number of old entries: ' + oldEntries.length);
+    console.log(`number of old entries: ${oldEntries.length}`);
     newBankDataEntries = oldEntries.concat(newBankDataEntries);
-    console.log('total new number of entries: ' + newBankDataEntries.length);
+    console.log(
+      `total new number of entries: ${newBankDataEntries.length}`,
+    );
 
-    Deno.writeTextFileSync(fileNameBankDataEntries, JSON.stringify(newBankDataEntries));
+    Deno.writeTextFileSync(
+      fileNameBankDataEntries,
+      JSON.stringify(newBankDataEntries),
+    );
 
     response.status = 201;
     response.body = {
@@ -101,9 +111,9 @@ const appendAllDataEntries = async (
 };
 
 export {
+  appendAllDataEntries,
   fetchAllDataEntries,
   fetchCategoryMap,
   saveAllDataEntries,
   saveCategoryMap,
-  appendAllDataEntries
 };

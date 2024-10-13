@@ -5,14 +5,14 @@ import {
   fetchCategoryMap,
   saveAllDataEntries,
   saveCategoryMap,
-} from "./controllers/dataEntries.ts";
+} from "../controllers/dataEntries.ts";
 
 const router = new Router();
 
 router
   .get("/api/v1/fetchAll", fetchAllDataEntries)
   .get("/api/v1/fetchCategoryMap", fetchCategoryMap)
-  .post("/api/v1/saveCategoryMap", saveCategoryMap)  
+  .post("/api/v1/saveCategoryMap", saveCategoryMap)
   .post("/api/v1/saveAll", saveAllDataEntries)
   .post("/api/v1/appendAll", appendAllDataEntries)
   .get("/", (ctx) => {
