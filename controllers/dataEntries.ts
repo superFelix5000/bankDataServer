@@ -1,14 +1,21 @@
-import { BankDataEntry, RecipientCategory } from "../src/types.ts";
+import { BankDataEntry, Category, RecipientCategory } from "../src/types.ts";
+import config from "../src/config.ts";
+import { z } from "https://deno.land/x/zod@v3.21.4/mod.ts";
+import { Context } from "https://deno.land/x/oak@v17.1.4/mod.ts";
 
-const fileNameBankDataEntries = "data/entries.json";
-const fileNameCategoryMap = "data/categoryMap.json";
+const { fileNameBankDataEntries, fileNameCategoryMap } = config;
 
-const fetchCategoryMap = async ({ response }: any) => {
+const RecipientCategorySchema = z.object({
+  recipient: z.string(),
+  category: z.nativeEnum(Category),
+});
+
+const fetchCategoryMap = async (ctx: Context) => {
   const text = await Deno.readTextFile(fileNameCategoryMap);
   const entries: RecipientCategory[] = JSON.parse(text);
 
-  response.status = 200;
-  response.body = {
+  ctx.response.status = 200;
+  ctx.response.body = {
     success: true,
     data: entries,
   };
@@ -19,18 +26,31 @@ const saveCategoryMap = async ({
   response,
 }: { request: any; response: any }) => {
   const body = request.body();
-  const values: RecipientCategory[] = await body.value;
-  if (request.hasBody) {
-    Deno.writeTextFileSync(fileNameCategoryMap, JSON.stringify(values));
+  const values = await body.value;
+  
+  try {
+    const validatedValues = z.array(RecipientCategorySchema).parse(values);
+    
+    if (request.hasBody) {
+      Deno.writeTextFileSync(fileNameCategoryMap, JSON.stringify(validatedValues));
 
-    response.status = 201;
-    response.body = {
-      success: true,
-    };
-  } else {
-    response.status = 404;
+      response.status = 201;
+      response.body = {
+        success: true,
+      };
+    } else {
+      response.status = 400;
+      response.body = {
+        success: false,
+        message: "Request body is empty",
+      };
+    }
+  } catch (error: unknown) {
+    response.status = 400;
     response.body = {
       success: false,
+      message: "Invalid input data",
+      errors: error instanceof z.ZodError ? error.errors : undefined,
     };
   }
 };
@@ -77,9 +97,11 @@ const appendAllDataEntries = async ({
   request,
   response,
 }: { request: any; response: any }) => {
-  const body = request.body();
-  const values: BankDataEntry[] = await body.value;
   if (request.hasBody) {
+    const body = await request.body.json();
+    console.log(`body: ${JSON.stringify(body)}`);
+    const values: BankDataEntry[] = body;
+  
     let newBankDataEntries = values;
 
     console.log(`entries to add: ${newBankDataEntries.length}`);
