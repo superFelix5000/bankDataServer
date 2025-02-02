@@ -1,4 +1,4 @@
-import { Router } from "https://deno.land/x/oak@v17.0.0/mod.ts";
+import { Router } from "https://deno.land/x/oak@v17.1.4/mod.ts";
 import {
   appendAllDataEntries,
   fetchAllDataEntries,

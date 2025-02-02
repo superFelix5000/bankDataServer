@@ -25,13 +25,10 @@ const saveCategoryMap = async ({
   request,
   response,
 }: { request: any; response: any }) => {
-  const body = request.body();
-  const values = await body.value;
-  
   try {
-    const validatedValues = z.array(RecipientCategorySchema).parse(values);
-    
     if (request.hasBody) {
+      const values = await request.body.json();
+      const validatedValues = z.array(RecipientCategorySchema).parse(values);
       Deno.writeTextFileSync(fileNameCategoryMap, JSON.stringify(validatedValues));
 
       response.status = 201;
@@ -59,8 +56,6 @@ const fetchAllDataEntries = async ({ response }: any) => {
   const text = await Deno.readTextFile(fileNameBankDataEntries);
   const entries: BankDataEntry[] = JSON.parse(text);
 
-  // console.log(JSON.stringify(entries[0]));
-
   response.status = 200;
   response.body = {
     success: true,
@@ -72,9 +67,8 @@ const saveAllDataEntries = async ({
   request,
   response,
 }: { request: any; response: any }) => {
-  const body = request.body();
-  const values: BankDataEntry[] = await body.value;
   if (request.hasBody) {
+    const values: BankDataEntry[] = await request.body.json();
     const newBankDataEntries = values;
     Deno.writeTextFileSync(
       fileNameBankDataEntries,
@@ -99,7 +93,6 @@ const appendAllDataEntries = async ({
 }: { request: any; response: any }) => {
   if (request.hasBody) {
     const body = await request.body.json();
-    console.log(`body: ${JSON.stringify(body)}`);
     const values: BankDataEntry[] = body;
   
     let newBankDataEntries = values;
